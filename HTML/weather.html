@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="main.css">
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sydney Weather</title>
+    <link rel="stylesheet" href="main.css" />
+</head>
+
+<body class="weather-page">
+
+    <nav class="weather-nav">
+        <div class="nav-container">
+            <div class="brand">PORTFOLIOOOOO</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Return to Portfolio</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="weather-container">
+
+        <div class="current-weather">
+            <h1>Sydney</h1>
+            <p class="current-temp">--°C</p>
+            <p class="current-desc">Loading...</p>
+        </div>
+
+        <div class="hourly-section">
+            <h2>00:00 - 11:00 Hourly Forecast</h2>
+            <div class="hourly-scroll"></div>
+        </div>
+
+        <div class="daily-section">
+            <h2>7‑Day Forecast</h2>
+            <div class="daily-grid"></div>
+        </div>
+
+    </section>
+
+    <script>
+        async function loadWeather() {
+            const url =
+                "https://api.open-meteo.com/v1/forecast?latitude=-33.8688&longitude=151.2093&current_weather=true&hourly=temperature_2m&daily=temperature_2m_max,temperature_2m_min&timezone=auto";
+
+            const res = await fetch(url);
+            const data = await res.json();
+
+            const current = data.current_weather;
+            document.querySelector(".current-temp").textContent = current.temperature + "°C";
+            document.querySelector(".current-desc").textContent = "Wind " + current.windspeed + " km/h";
+
+            const hourlyBox = document.querySelector(".hourly-scroll");
+            hourlyBox.innerHTML = "";
+
+            for (let i = 0; i < 25; i++) {
+                const hourTemp = data.hourly.temperature_2m[i];
+                const hourTime = data.hourly.time[i].slice(11, 16);
+
+                const card = document.createElement("div");
+                card.className = "hour-card";
+                card.innerHTML = `
+                    <p>${hourTime}</p>
+                    <p class="hour-temp">${hourTemp}°</p>
+                `;
+                hourlyBox.appendChild(card);
+            }
+
+            const dailyBox = document.querySelector(".daily-grid");
+            dailyBox.innerHTML = "";
+
+            for (let i = 0; i < data.daily.time.length; i++) {
+                const day = new Date(data.daily.time[i]).toLocaleDateString("en-AU", { weekday: "short" });
+                const max = data.daily.temperature_2m_max[i];
+                const min = data.daily.temperature_2m_min[i];
+
+                const row = document.createElement("div");
+                row.className = "day-row";
+                row.innerHTML = `
+                    <span>${day}</span>
+                    <span>${min}° / ${max}°</span>
+                `;
+                dailyBox.appendChild(row);
+            }
+        }
+
+        loadWeather();
+    </script>
+
+</body>
+</html>

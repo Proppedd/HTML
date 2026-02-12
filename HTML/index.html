@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="main.css">
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio :P</title>
+    <link rel="stylesheet" href="main.css" />
+</head>
+<body id="top">
+
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="brand">PORTFOLIOOOOO</div>
+            <ul class="nav-links">
+                <li><a href="#top">Home</a></li>
+                <li><a href="#modules1-2">Module 1‑2</a></li>
+                <li><a href="#module3">Module 3</a></li>
+                <li><a href="#weather-section">Weather</a></li>
+                <li><a href="#module5">Modules 5-6</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Introducing Apple Themed Portfolio</h1>
+        <h2>Made by yours truly SIEHENG!</h2>
+        <a href="https://www.youtube.com/watch?v=xMHJGd3wwZk" class="cta">Click here to get $500 free :3</a>
+    </section>
+
+    <section class="product-grid">
+        <div class="product-card">
+            <h3>Drinking Water</h3>
+            <p>Is good for you.</p>
+        </div>
+
+        <div class="product-card dark">
+            <h3>Eating well</h3>
+            <p>Is also good for you.</p>
+        </div>
+    </section>
+
+    <section class="code-presentation" id="modules1-2">
+        <h2>Modules 1-2</h2>
+        <h2>Website Code Preview</h2>
+        <p>Wowie check this out!</p>
+        <p>RECOMMENDED: Only have one of them open at a time - it can lag with both open :/</p>
+
+        <!-- HTML COLLAPSIBLE -->
+        <details class="code-collapse">
+            <summary>index.html</summary>
+            <div class="code-block">
+    <pre><code id="htmlPreview" class="language-markup">Loading HTML...</code></pre>
+            </div>
+        </details>
+        
+
+        <!-- CSS COLLAPSIBLE -->
+        <details class="code-collapse">
+            <summary>main.css</summary>
+            <div class="code-block">
+    <pre><code id="cssPreview" class="language-css">Loading CSS...</code></pre>
+            </div>
+        </details>
+    </section>
+
+    <!-- Prism.js syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+
+    <script>
+    async function loadCodePreview() {
+        try {
+            const htmlFile = await fetch("index.html");
+            const cssFile = await fetch("main.css");
+
+            const htmlText = await htmlFile.text();
+            const cssText = await cssFile.text();
+
+            document.getElementById("htmlPreview").textContent = htmlText;
+            document.getElementById("cssPreview").textContent = cssText;
+
+            Prism.highlightElement(document.getElementById("htmlPreview"));
+            Prism.highlightElement(document.getElementById("cssPreview"));
+        } catch (e) {
+            document.getElementById("htmlPreview").textContent = "Unable to load HTML.";
+            document.getElementById("cssPreview").textContent = "Unable to load CSS.";
+        }
+    }
+
+    loadCodePreview();
+    </script>
+
+    <section id="module3" class="code-presentation">
+        <h2>Module 3</h2>
+        <p>Content for Module 3 will go here.</p>
+        <a href="Form.html" class="cta">Open Form Validation Page</a>
+        <p>Click the buttons below to see the coding!!!</p>
+        <details class="code-collapse">
+            <summary>Form.html</summary>
+            <div class="code-block">
+    <pre><code id="formPreview" class="language-markup">Loading HTML...</code></pre>
+            </div>
+        </details>
+
+        <details class="code-collapse">
+            <summary>script.js</summary>
+            <div class="code-block">
+    <pre><code id="jsPreview" class="language-js">Loading JS...</code></pre>
+            </div>
+        </details>
+
+    </section>
+
+    <script>
+    async function loadCodePreview() {
+        try {
+            const formFile = await fetch("Form.html");
+            const jsFile = await fetch("script.js");
+
+            const formText = await formFile.text();
+            const jsText = await jsFile.text();
+
+            document.getElementById("formPreview").textContent = formText;
+            document.getElementById("jsPreview").textContent = jsText;
+
+            Prism.highlightElement(document.getElementById("formPreview"));
+            Prism.highlightElement(document.getElementById("jsPreview"));
+        } catch (e) {
+            document.getElementById("formPreview").textContent = "Unable to load HTML.";
+            document.getElementById("jsPreview").textContent = "Unable to load JS.";
+        }
+    }
+
+    loadCodePreview();
+    </script>
+
+    <section id="weather-section" class="code-presentation">
+        <h2>Module 4</h2>
+        <h3>Weather API</h3>
+        <p>Click below to view the Sydney weather dashboard :DD</p>
+        <a href="weather.html" class="cta">Open Weather Page</a>
+    </section>
+
+    <section id="module5" class="code-presentation">
+        <h2>Module 5</h2>
+        <p>Content for Module 5 will go here.</p>
+        <a href="Form.html" class="cta">Open Form Validation Page</a>
+    </section>
+
+    <section id="module6" class="code-presentation">
+        <h2>Module 6</h2>
+        <p>Below are all the achievements I've earned in Grok!</p>
+        <div class="image-gallery">
+            <img src="Achievements\html-css-beginners-1-cert.png"
+                alt="html intro beginners 1 certificate"/>
+            <img src="Achievements\html-css-beginners-2-cert.png"
+                alt="html intro beginners 2 certificate"/>
+            <img src="Achievements\ui-ux-design-certificate.png"
+                alt="UI/UX design certificate"/>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 1976 Epic Apples. All lefts conserved.</p>
+    </footer>
+    
+
+</body>
+</html>
