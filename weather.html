@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Modern Weather App</title>
+
+<link rel="stylesheet" href="weatherSTYLES.css">
+</head>
+
+<body>
+<div class="app">
+
+    <!-- Search -->
+    <div class="search-container">
+        <input id="searchInput" type="text" placeholder="Search for a location..." />
+        <button onclick="searchWeather()">Search</button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading" style="display:none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Current Weather -->
+    <div class="current-weather" id="currentWeather" style="display:none;"></div>
+
+    <!-- Hourly Chart -->
+    <div class="hourly" id="hourlyWeather" style="display:none;">
+        <h3>24‑Hour Temperature</h3>
+        <canvas id="hourlyChart"></canvas>
+    </div>
+
+    <!-- 7-Day Forecast -->
+    <div class="daily" id="dailyWeather" style="display:none;"></div>
+
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Weather Icons (simple mapping)
+const weatherIcons = {
+    0: "☀️",
+    1: "🌤️",
+    2: "⛅",
+    3: "☁️",
+    45: "🌫️",
+    48: "🌫️",
+    51: "🌦️",
+    61: "🌧️",
+    71: "🌨️",
+    95: "⛈️"
+};
+
+function showLoading(show) {
+    document.getElementById("loading").style.display = show ? "flex" : "none";
+}
+
+async function searchWeather() {
+    const location = document.getElementById("searchInput").value.trim();
+    if (!location) return;
+
+    showLoading(true);
+
+    // 1. Geocoding API
+    const geoRes = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${location}&count=1`
+    );
+    const geoData = await geoRes.json();
+
+    if (!geoData.results || geoData.results.length === 0) {
+        alert("Location not found");
+        showLoading(false);
+        return;
+    }
+
+    const { latitude, longitude, name, country } = geoData.results[0];
+
+    // 2. Weather API
+    const weatherRes = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=temperature_2m,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`
+    );
+    const weather = await weatherRes.json();
+
+    displayCurrentWeather(name, country, weather);
+    displayHourly(weather);
+    displayDaily(weather);
+
+    showLoading(false);
+}
+
+// Current weather
+function displayCurrentWeather(name, country, data) {
+    const el = document.getElementById("currentWeather");
+    el.style.display = "block";
+
+    const icon = weatherIcons[data.current_weather.weathercode] || "🌡️";
+
+    el.innerHTML = `
+        <h2>${name}, ${country}</h2>
+        <div class="current-main">
+            <div class="current-temp">${data.current_weather.temperature}°C</div>
+            <div class="current-icon">${icon}</div>
+        </div>
+        <div class="current-extra">
+            <div>Wind: ${data.current_weather.windspeed} km/h</div>
+            <div>Time: ${data.current_weather.time}</div>
+        </div>
+    `;
+
+    // Dynamic background
+    const hour = new Date(data.current_weather.time).getHours();
+    document.body.className = hour >= 6 && hour < 18 ? "day-bg" : "night-bg";
+}
+
+// Hourly chart
+function displayHourly(data) {
+    const el = document.getElementById("hourlyWeather");
+    el.style.display = "block";
+
+    const hours = data.hourly.time.slice(0, 24).map(t => t.slice(11, 16));
+    const temps = data.hourly.temperature_2m.slice(0, 24);
+
+    const ctx = document.getElementById("hourlyChart").getContext("2d");
+
+    if (window.hourlyChartInstance) {
+        window.hourlyChartInstance.destroy();
+    }
+
+    window.hourlyChartInstance = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: hours,
+            datasets: [{
+                label: "Temp (°C)",
+                data: temps,
+                borderColor: "#0078ff",
+                backgroundColor: "#0078ff33",
+                borderWidth: 3,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: false }
+            }
+        }
+    });
+}
+
+// 7-day forecast
+function displayDaily(data) {
+    const el = document.getElementById("dailyWeather");
+    el.style.display = "block";
+
+    let html = `<h3>7‑Day Forecast</h3>`;
+
+    for (let i = 0; i < 7; i++) {
+        const icon = weatherIcons[data.daily.weathercode[i]] || "🌡️";
+
+        html += `
+            <div class="day">
+                <div>${data.daily.time[i]}</div>
+                <div class="day-icon">${icon}</div>
+                <div>${data.daily.temperature_2m_min[i]}° / ${data.daily.temperature_2m_max[i]}°</div>
+            </div>
+        `;
+    }
+
+    el.innerHTML = html;
+}
+
+// Enter key support
+document.getElementById("searchInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") searchWeather();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="formCSS.css">
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>REALLY Simple Validation Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .error { color: red; font-size: 14px; margin-top: 4px; }
+    .input-group { margin-bottom: 15px; }
+    input { padding: 8px; width: 250px; }
+    button { padding: 10px 20px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h2>REALLY Simple Validation Form</h2>
+  <h3>Add some info and I will wire you $300,000 (I can't)</h3>
+
+  <form id="myForm">
+    <div class="input-group">
+      <label>Name:</label><br>
+      <input type="text" id="name">
+      <div id="nameError" class="error"></div>
+    </div>
+
+    <div class="input-group">
+      <label>Email:</label><br>
+      <input type="text" id="email">
+      <div id="emailError" class="error"></div>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
